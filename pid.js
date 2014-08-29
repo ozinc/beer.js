@@ -48,7 +48,7 @@ pid.prototype.process = function(inputvalue) {
 	if(this.lastvalue == undefined) {
 		Dpart = 0;
 	} else {
-		Dpart = D * (currentvalue - this.lastvalue);
+		Dpart = D * (this.lastvalue - currentvalue);
 	}
 		this.lastvalue = inputvalue;
 
