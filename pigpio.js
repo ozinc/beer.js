@@ -11,7 +11,7 @@ var fs = require('fs');
 
 function pigpio(id, direction) {
 	this.id = id;
-	this.filename = '/sys/class/gpio/gpio' + id.toString() + 'value';
+	this.filename = '/sys/class/gpio/gpio' + id.toString() + '/value';
 	var fd = fs.openSync('/sys/class/gpio/export', 'w');
 	var buf = new Buffer(id.toString());
 	fs.writeSync(fd, buf, 0, buf.size, 0);
