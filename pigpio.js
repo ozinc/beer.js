@@ -33,7 +33,7 @@ pigpio.prototype.setSync = function(value) {
 pigpio.prototype.get = function(cb) {
 	fs.readFile(this.filename, function(err, data) {
 		if(err) return cb(err, null);
-		if(data == '1') {
+		if(data.toString().substr(0, 1) == '1') {
 			cb(null, true);
 		} else {
 			cb(null, false);
@@ -42,8 +42,8 @@ pigpio.prototype.get = function(cb) {
 }
 
 pigpio.prototype.getSync = function() {
-	var val = fs.readFileSync(this.filename);
-	if(val == '1') {
+	var data = fs.readFileSync(this.filename);
+	if(data.toString().substr(0, 1) == '1') {
 		return true;
 	} else {
 		return false;
