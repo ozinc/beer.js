@@ -37,4 +37,12 @@ setInterval(function() {
 		});
 	}
 }, cycletime * 1000);
-	       	       
+	       	      
+function _exit() {
+	gpio2.setSync(0);
+	process.exit();
+}
+
+process.on('exit', _exit.bind());
+process.on('SIGINT', _exit.bind());
+process.on('uncaughtException', _exit.bind());
