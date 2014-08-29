@@ -15,8 +15,8 @@ function pi1wire(id, direction) {
 	var devs = fs.readdirSync('/sys/bus/w1/devices');
 	this.thermos = [];
 	for(i in devs) {
-		if(i.substr(0,3) == '28-') {
-			this.thermos.push(i);
+		if(devs[i].substr(0,3) == '28-') {
+			this.thermos.push(devs[i]);
 		}
 	}
 	this.thermos.sort();
