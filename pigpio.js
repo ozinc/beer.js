@@ -42,7 +42,7 @@ pigpio.prototype.get = function(cb) {
 }
 
 pigpio.prototype.getSync = function() {
-	var val = readFileSync(this.filename);
+	var val = fs.readFileSync(this.filename);
 	if(val == '1') {
 		return true;
 	} else {
