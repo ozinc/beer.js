@@ -55,7 +55,7 @@ pi1wire.prototype.getSync = function(id) {
 	} else {
 		filename = '/sys/bus/w1/devices/' + this.thermos[id] + '/w1_slave';
 	}
-	var data = fs.readFileSync(this.filename);
+	var data = fs.readFileSync(filename);
 	var d = data.toString();
 	if(d.match(/YES/)) { 
 		var m;
