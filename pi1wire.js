@@ -11,7 +11,7 @@
 
 var fs = require('fs');
 
-function pi1wire(id, direction) {
+function pi1wire() {
 	var devs = fs.readdirSync('/sys/bus/w1/devices');
 	this.thermos = [];
 	for(i in devs) {
@@ -20,6 +20,9 @@ function pi1wire(id, direction) {
 		}
 	}
 	this.thermos.sort();
+}
+
+pi1wire.prototype.list = function() {
 	return this.thermos;
 }
 
@@ -34,7 +37,8 @@ pi1wire.prototype.get = function(id, cb) {
 		if(err) return cb(err, null);
 		var d = data.toString();
 		if(d.match(/YES/)) { 
-			if(var m = d.match(/t=(.+)/)) {
+			var m;
+			if(m = d.match(/t=(.+)/)) {
 				var t = parseInt(m[1]);
 				t = t / 1000;
 				return cb(null, t);
@@ -54,7 +58,8 @@ pi1wire.prototype.getSync = function(id) {
 	var data = fs.readFileSync(this.filename);
 	var d = data.toString();
 	if(d.match(/YES/)) { 
-		if(var m = d.match(/t=(.+)/)) {
+		var m;
+		if(m = d.match(/t=(.+)/)) {
 			var t = parseInt(m[1]);
 			t = t / 1000;
 			return t;
