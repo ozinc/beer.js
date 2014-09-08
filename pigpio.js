@@ -12,14 +12,9 @@ var fs = require('fs');
 function pigpio(id, direction) {
 	this.id = id;
 	this.filename = '/sys/class/gpio/gpio' + id.toString() + '/value';
-	var fd = fs.openSync('/sys/class/gpio/export', 'w');
-	var buf = new Buffer(id.toString());
-	fs.writeSync(fd, buf, 0, buf.size, 0);
-	fs.closeSync(fd);
-	fd = fs.openSync('/sys/class/gpio/gpio' + id.toString() + '/direction', 'w');
-	buf = new Buffer(direction);
-	fs.writeSync(fd, buf, 0, buf.size, 0);
-	fs.closeSync(fd);
+	this.watcher = '';
+	fs.writeFileSync('/sys/class/gpio/export', id.toString());
+	fs.writeFileSync('/sys/class/gpio/gpio' + id.toString() + '/direction', direction);
 }
 
 pigpio.prototype.set = function(value, cb) {
@@ -48,6 +43,25 @@ pigpio.prototype.getSync = function() {
 	} else {
 		return false;
 	}
+}
+
+pigpio.prototype.watch = function(cb) {
+	var port = this;
+	this.watcher = setInterval(function() {
+		port.get(function(err, val) {
+			if(port.laststate != undefined) {
+				if(port.laststate != val) {
+					port.laststate = val;
+					return cb(val);
+				}
+			}
+			port.laststate = val;
+		});	
+	}, 20);
+}
+
+pigpio.prototype.unwatch = function() {
+	clearInterval(this.watcher);
 }
 
 module.exports = pigpio;
