@@ -12,18 +12,6 @@ var pidctl = new pid(0.1, 0.01, 0.1, -1, 1, 30);
 
 var cycletime = 10; // Run PWM cycle for 10 seconds
 
-
-
-curl  -X POST -H "Content-type: application/json" \
--d '{
-      "title": "Did you hear the news today?",
-      "text": "Oh boy!",
-      "priority": "normal",
-      "tags": ["environment:test"],
-      "alert_type": "info"
-  }' \
-'https://app.datadoghq.com/api/v1/events?api_key=9775a026f1ca7d1c6c5af9d94d9595a4'
-
 var datadogApiKey = process.env.DATADOG_API_KEY;
 
 // Read temperature every 2 seconds or so
