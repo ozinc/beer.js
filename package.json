@@ -1,0 +1,22 @@
+{
+  "name": "beer.js",
+  "version": "0.0.1",
+  "description": "OZ's beer monitoring system!",
+  "main": "pidcontrol.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ozinc/beer.js"
+  },
+  "author": "",
+  "license": "Beerware",
+  "bugs": {
+    "url": "https://github.com/ozinc/beer.js/issues"
+  },
+  "homepage": "https://github.com/ozinc/beer.js",
+  "dependencies": {
+    "request": "^2.42.0"
+  }
+}
