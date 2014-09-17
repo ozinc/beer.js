@@ -14,6 +14,11 @@ var cycletime = 10; // Run PWM cycle for 10 seconds
 
 var datadogApiKey = process.env.DATADOG_API_KEY;
 
+if (!datadogApiKey) {
+	console.log('ERR: You need to provide a DATADOG_API_KEY env variable.');
+	process.exit(-1);
+}
+
 // Read temperature every 2 seconds or so
 setInterval(function() {
 	thermo.get(0, function (err, val) {
@@ -29,7 +34,7 @@ setInterval(function() {
 				}]
 		};
 		var options = {
-			'url': 'https://app.datadoghq.com/api/v1/series?api_key=' + datadogApiKey
+			'url': 'https://app.datadoghq.com/api/v1/series?api_key=' + datadogApiKey,
 			'body': data,
 			'headers': {
 				'Content-Type': 'application/json'
