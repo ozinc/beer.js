@@ -1,0 +1,29 @@
+<html>
+<head>
+<title>Brewberry controller</title>
+<body>
+<table>
+  <tr>
+    <td>Temperature 0</td>
+    <td id="temp0">bar</td>
+  </tr>
+  <tr>
+    <td>Temperature 1</td>
+    <td id="temp1">bar</td>
+  </tr>
+  <tr>
+    <td>Control mode</td>
+    <td>
+      <input type="radio" name="controlmode" value="off">Off 
+      <input type="radio" name="controlmode" value="manual">manual
+      <input type="radio" name="controlmode" value="pid">PID
+    </td>
+  </tr>
+  <tr>
+    <td>Manual duty cycle</td>
+    <td><input type="text" id="staticDC">%</td>
+  </tr>
+</table>
+</body>
+<script language="javascript" src="client.js"></script>
+</html>

@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/ozinc/beer.js",
   "dependencies": {
+    "express": "^4.9.4",
     "request": "^2.42.0"
   }
 }
