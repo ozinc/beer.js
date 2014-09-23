@@ -12,6 +12,10 @@
     <td id="temp1">bar</td>
   </tr>
   <tr>
+    <td>Duty cycle</td>
+    <td id="dc"></td>
+  </tr>
+  <tr>
     <td>Control mode</td>
     <td>
       <input type="radio" name="controlmode" value="off">Off 
@@ -21,7 +25,39 @@
   </tr>
   <tr>
     <td>Manual duty cycle</td>
-    <td><input type="text" id="staticDC">%</td>
+    <td><input type="text" id="staticDC"> %</td>
+  </tr>
+  <tr>
+    <td>PWM cycle time</td>
+    <td><input type="text" id="cycletime"> seconds</td>
+  </tr>
+  <tr>
+    <td>PID set point</td>
+    <td><input type="text" id="setpoint"> °C</td>
+  </tr>
+  <tr>
+    <td>PID P factor</td>
+    <td><input type="text" id="Pfactor"></td>
+  </tr>
+  <tr>
+    <td>PID I factor</td>
+    <td><input type="text" id="Ifactor"></td>
+  </tr>
+  <tr>
+    <td>PID D factor</td>
+    <td><input type="text" id="Dfactor"></td>
+  </tr>
+  <tr>
+    <td>I upper limit</td>
+    <td><input type="text" id="Imax"></td>
+  </tr>
+  <tr>
+    <td>I lower limit</td>
+    <td><input type="text" id="Imin"></td>
+  </tr>
+  <tr>
+    <td><input type="submit" value="Update settings" id="updatesettings"></td>
+    <td id="setstatus"></td>
   </tr>
 </table>
 </body>
