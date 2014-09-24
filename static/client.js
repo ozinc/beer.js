@@ -23,7 +23,6 @@ settingrequest.onreadystatechange = function() {
 var settingputrequest = new XMLHttpRequest();
 settingputrequest.onreadystatechange = function() {
   if(settingputrequest.readyState == 4 && settingputrequest.status == 200) {
-    alert("OK");
     document.getElementById('setstatus').innerHTML = 'Updated settings';
     getsettings();
   }
@@ -80,9 +79,18 @@ function displaysettings() {
   document.getElementById('Imin').value = settings.pid.Imin;
 }
 
+function focuschanged() {
+  document.getElementById('setstatus').innerHTML = '&nbsp;';
+}
+
 updatesensors();
 getsettings();
 window.setInterval(updatesensors, 2000);
 
 document.getElementById('updatesettings').onclick = putsettings;
+
+var allinputs = document.getElementsByTagName('input');
+for(var i = 0; i < allinputs.length; i++) {
+  allinputs[i].onfocus = focuschanged;
+}
 

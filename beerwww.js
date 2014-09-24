@@ -12,10 +12,10 @@ var fs = require('fs');
 var server = express();
 
 var settingsfile = 'settings.json';
-
 var gpio2 = new pigpio(2, 'out');
 var gpio3 = new pigpio(3, 'out');
 var thermo = new pi1wire();
+
 var datadogApiKey = process.env.DATADOG_API_KEY;
 
 if (!datadogApiKey) {
@@ -23,7 +23,7 @@ if (!datadogApiKey) {
 }
 
 var sensors = {
-  temperature: [],
+  temperature: [0, 0],
   dutycycle: 0
 };
 
@@ -140,7 +140,7 @@ function setsettings(req, res) {
   fs.writeFile(settingsfile, JSON.stringify(settings), function(err) {
     if(err) console.log('Error saving settings to file');
   });
-  res.status(200);
+  res.status(200).json({ result: 'success' });
 } 
 
 function rootredirect(req,res) {
