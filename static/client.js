@@ -8,7 +8,7 @@ sensorrequest.onreadystatechange = function() {
     var sensors = JSON.parse(sensorrequest.responseText);
     document.getElementById('temp0').innerHTML = sensors.temperature[0].toFixed(1) + '°C';
     document.getElementById('temp1').innerHTML = sensors.temperature[1].toFixed(1) + '°C';
-    document.getElementById('dc').innerHTML = sensors.dutycycle.toFixed(3) * 100 + '%';
+    document.getElementById('dc').innerHTML = (sensors.dutycycle * 100).toFixed(1) + '%';
   }
 }
 

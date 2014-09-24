@@ -51,11 +51,12 @@ var settings = {
 try {
   var nonvolatile = fs.readFileSync(settingsfile);
   settings = JSON.parse(nonvolatile.toString());
+  console.log(settings);
 } catch(er) {
   console.log('No stored settings found, using default');
 }
 
-var pidctl = new pid(settings.pid);
+var pidctl = new pid();
 
 server.use(bodyParser.json());
 server.use(express.static(path.join(__dirname, 'static')));
@@ -81,10 +82,10 @@ setInterval(function() {
       };
       var options = {
         'url': 'https://app.datadoghq.com/api/v1/series?api_key=' + datadogApiKey,
-    'body': data,
-    'headers': {
-      'Content-Type': 'application/json'
-    }
+  'body': data,
+  'headers': {
+    'Content-Type': 'application/json'
+  }
       };
       request.post(options, function (err, res, body) {
         if (err) {
@@ -108,12 +109,13 @@ function setoutputs(val) {
 function outputprocess() {
   var output;
   if(settings.controlmode === 'pid') {
-    output = pidctl.process(temperature);
+    output = pidctl.process(settings.pid, sensors.temperature[0]);
   } else if(settings.controlmode === 'manual') {
     output = settings.staticDC;
   } else {
     output = 0;
   }
+  sensors.dutycycle = output;
   var delay = settings.cycletime * 1000 * output;
   if(output <= 0) {
     console.log('0% duty');
@@ -171,12 +173,16 @@ server.all('/', rootredirect);
 server.listen(8000);
 
 function _exit() {
-  gpio2.setSync(0);
-  gpio3.setSync(0);
+  if(!dummymode) {
+    gpio2.setSync(0);
+    gpio3.setSync(0);
+  }
   process.exit();
 }
 
-process.on('exit', _exit.bind());
-process.on('SIGINT', _exit.bind());
-process.on('uncaughtException', _exit.bind());
+if(!dummymode) {
+  process.on('exit', _exit.bind());
+  process.on('SIGINT', _exit.bind());
+  process.on('uncaughtException', _exit.bind());
+}
 

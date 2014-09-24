@@ -9,12 +9,11 @@
 
 /* NodeJS PID controller library */
 
-function pid(settings) {
-  this.settings = settings;
+function pid() {
 	this.Istate = 0;
 }
 
-pid.prototype.process = function(inputvalue) {
+pid.prototype.process = function(settings, inputvalue) {
 	var currentvalue;
 	if(inputvalue instanceof Function) {
 		currentvalue = inputvalue();
@@ -23,17 +22,17 @@ pid.prototype.process = function(inputvalue) {
 	}
 
 	var setpoint;
-	if(this.settings.setpoint instanceof Function) {
-		setpoint = this.settings.setpoint();
+	if(settings.setpoint instanceof Function) {
+		setpoint = settings.setpoint();
 	} else {
-		setpoint = this.settings.setpoint;
+		setpoint = settings.setpoint;
 	}
 
 // console.log('Setpoint ' + setpoint + ' and current value ' + inputvalue);
 
-	var P = this.settings.P;
-	var I = this.settings.I;
-	var D = this.settings.D;
+	var P = settings.P;
+	var I = settings.I;
+	var D = settings.D;
 
 	var error = setpoint - inputvalue;
 
@@ -48,8 +47,8 @@ pid.prototype.process = function(inputvalue) {
 		this.lastvalue = inputvalue;
 
 	this.Istate += Ipart;
-	if(this.Istate > this.settings.Imax) this.Istate = this.settings.Imax;
-	else if(this.Istate < this.settings.Imin) this.Istate = this.settings.Imin;
+	if(this.Istate > settings.Imax) this.Istate = settings.Imax;
+	else if(this.Istate < settings.Imin) this.Istate = settings.Imin;
 
 	var outputvalue = Ppart + this.Istate + Dpart;
 	console.log('P ' + Ppart + ' I ' + this.Istate + ' D ' + Dpart + ' Output value ' + outputvalue);
