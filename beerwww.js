@@ -12,9 +12,16 @@ var fs = require('fs');
 var server = express();
 
 var settingsfile = 'settings.json';
-var gpio2 = new pigpio(2, 'out');
-var gpio3 = new pigpio(3, 'out');
-var thermo = new pi1wire();
+var dummymode = false;
+
+try {
+  var gpio2 = new pigpio(2, 'out');
+  var gpio3 = new pigpio(3, 'out');
+  var thermo = new pi1wire();
+} catch(er) {
+  console.log('Not all hardware is in place, running in dev mode');
+  dummymode = true;
+}
 
 var datadogApiKey = process.env.DATADOG_API_KEY;
 
@@ -41,8 +48,6 @@ var settings = {
   cycletime: 10
 };
 
-var pidctl = new pid(settings.pid);
-
 try {
   var nonvolatile = fs.readFileSync(settingsfile);
   settings = JSON.parse(nonvolatile.toString());
@@ -50,11 +55,17 @@ try {
   console.log('No stored settings found, using default');
 }
 
+var pidctl = new pid(settings.pid);
+
 server.use(bodyParser.json());
 server.use(express.static(path.join(__dirname, 'static')));
 
 // Read temperature every 2 seconds or so
 setInterval(function() {
+  if(dummymode) {
+    sensors.temperature[0] += 0.1;
+    return;
+  }
   thermo.get(0, function (err, val) {
     sensors.temperature[0] = val;
     console.log('Temperature is ' + val);
@@ -89,6 +100,7 @@ setInterval(function() {
 }, 2000);
 
 function setoutputs(val) {
+  if(dummymode) return;
   gpio2.set(val, null);
   gpio3.set(val, null);
 }
