@@ -13,6 +13,9 @@ function pigpio(id, direction) {
 	this.id = id;
 	this.filename = '/sys/class/gpio/gpio' + id.toString() + '/value';
 	this.watcher = '';
+	if(fs.existsSync(this.filename)) {
+		fs.writeFileSync('/sys/class/gpio/unexport', id.toString());
+	}
 	fs.writeFileSync('/sys/class/gpio/export', id.toString());
 	fs.writeFileSync('/sys/class/gpio/gpio' + id.toString() + '/direction', direction);
 }
