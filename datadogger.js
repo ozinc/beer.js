@@ -26,7 +26,26 @@ setInterval(function () {
     'type': 'gauge',
     'host': 'oz.com',
     'tags': ['thermometer:0']
-        }]
+        },
+    {
+          'metric': 'beer.temperature1',
+    'points': [
+    [parseInt(new Date().getTime() / 1000), parsed.temperature[1]]
+    ],
+    'type': 'gauge',
+    'host': 'oz.com',
+    'tags': ['thermometer:0']
+     },
+
+    {   'metric': 'beer.power',
+    'points': [
+    [parseInt(new Date().getTime() / 1000), parsed.dutycycle * 100]
+    ],
+    'type': 'gauge',
+    'host': 'oz.com',
+    'tags': ['dutycycle']
+        }
+    ]
       };
       var options = {
         url: 'https://app.datadoghq.com/api/v1/series',
