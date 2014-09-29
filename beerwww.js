@@ -77,7 +77,6 @@ function setoutputs(val) {
 
 function outputprocess() {
   var output;
-  output = dongs;
   if(settings.controlmode === 'pid') {
     output = pidctl.process(settings.pid, sensors.temperature[0]);
     output += settings.pid.offset;
