@@ -42,7 +42,8 @@ var settings = {
     I: 0.01,
     D: 0.1,
     Imax: 1,
-    Imin: -1
+    Imin: -1,
+    offset: 0.2
   },
   staticDC: 0.7,
   cycletime: 10
@@ -110,6 +111,7 @@ function outputprocess() {
   var output;
   if(settings.controlmode === 'pid') {
     output = pidctl.process(settings.pid, sensors.temperature[0]);
+    output += settings.pid.offset;
   } else if(settings.controlmode === 'manual') {
     output = settings.staticDC;
   } else {

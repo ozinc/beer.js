@@ -53,6 +53,7 @@ function formtosettings() {
   settings.pid.D = parseFloat(document.getElementById('Dfactor').value);
   settings.pid.Imax = parseFloat(document.getElementById('Imax').value);
   settings.pid.Imin = parseFloat(document.getElementById('Imin').value);
+  settings.pid.offset = parseFloat(document.getElementById('offset').value) / 100;
 }
 
 function putsettings() {
@@ -77,6 +78,7 @@ function displaysettings() {
   document.getElementById('Dfactor').value = settings.pid.D;
   document.getElementById('Imax').value = settings.pid.Imax;
   document.getElementById('Imin').value = settings.pid.Imin;
+  document.getElementById('offset').value = settings.pid.offset.toFixed(3) * 100;
 }
 
 function focuschanged() {
