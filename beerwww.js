@@ -1,5 +1,3 @@
-var request = require('request');
-
 var pigpio = require('./pigpio');
 var pi1wire = require('./pi1wire');
 var pid = require('./pid');
@@ -21,12 +19,6 @@ try {
 } catch(er) {
   console.log('Not all hardware is in place, running in dev mode');
   dummymode = true;
-}
-
-var datadogApiKey = process.env.DATADOG_API_KEY;
-
-if (!datadogApiKey) {
-  console.log('WARN: You need to provide a DATADOG_API_KEY env variable to enable statistics collection.');
 }
 
 var sensors = {
@@ -71,30 +63,6 @@ setInterval(function() {
   thermo.get(0, function (err, val) {
     sensors.temperature[0] = val;
     console.log('Temperature is ' + val);
-    if(datadogApiKey) {
-      var data = {
-        "series": [{
-          "metric": "beer.temperature",
-    "points": [[new Date().getTime(), 0]],
-    "type": "counter",
-    "host": "oz.com",
-    "tags": ["thermometer:0"]
-        }]
-      };
-      var options = {
-        'url': 'https://app.datadoghq.com/api/v1/series?api_key=' + datadogApiKey,
-  'body': data,
-  'headers': {
-    'Content-Type': 'application/json'
-  }
-      };
-      request.post(options, function (err, res, body) {
-        if (err) {
-          console.error(err);
-          return;
-        }
-      });
-    }
   });
   thermo.get(1, function(err,val) {
     sensors.temperature[1] = val;
@@ -109,6 +77,7 @@ function setoutputs(val) {
 
 function outputprocess() {
   var output;
+  output = dongs;
   if(settings.controlmode === 'pid') {
     output = pidctl.process(settings.pid, sensors.temperature[0]);
     output += settings.pid.offset;
@@ -174,11 +143,12 @@ server.all('/', rootredirect);
 
 server.listen(8000);
 
-function _exit() {
+function _exit(err) {
   if(!dummymode) {
     gpio2.setSync(0);
     gpio3.setSync(0);
   }
+  if(err) console.log(err.stack);
   process.exit();
 }
 
