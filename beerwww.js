@@ -106,6 +106,8 @@ function outputprocess() {
 var outpchandle = setInterval(outputprocess, settings.cycletime * 1000);
 
 function getsensors(req,res) {
+  var date = new Date();
+  sensors.servertime = date.toISOString();
   res.status(200).json(sensors);
 }
 
