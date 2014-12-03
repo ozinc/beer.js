@@ -12,9 +12,13 @@ function updatesensors() {
 }
 
 function getsettings() {
-  $.getJSON('/settings', function(data) {settings = data; console.log(data);});
-  displaysettings();
+  $.getJSON('/settings', function(data) {
+    settings = data;
+    console.log(data);
+    displaysettings();
+  });
 }
+
 function formtosettings() {
 
   settings.controlmode = $('input[name=controlmode]:checked').val();
@@ -48,14 +52,12 @@ function displaysettings() {
   $('#offset').val(settings.pid.offset.toFixed(3) * 100);
 }
 
-function focuschanged() {
-  $('#setstatus').text('&nbsp;');
-}
-
-updatesensors();
+// Wait for dom to be ready
 getsettings();
+updatesensors();
 window.setInterval(updatesensors, 2000);
 
 $('#updatesettings').click(putsettings);
 
-$('input').focus(focuschanged);
+$('input').focus(function() {$('#setstatus').text('&nbsp;');});
+
