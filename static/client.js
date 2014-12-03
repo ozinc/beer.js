@@ -1,99 +1,61 @@
-
 var sensors;
 var settings;
 
-var sensorrequest = new XMLHttpRequest();
-sensorrequest.onreadystatechange = function() {
-  if(sensorrequest.readyState == 4 && sensorrequest.status == 200) {
-    var sensors = JSON.parse(sensorrequest.responseText);
-    document.getElementById('temp0').innerHTML = sensors.temperature[0].toFixed(1) + '°C';
-    document.getElementById('temp1').innerHTML = sensors.temperature[1].toFixed(1) + '°C';
-    document.getElementById('dc').innerHTML = (sensors.dutycycle * 100).toFixed(1) + '%';
-    document.getElementById('date').innerHTML = sensors.servertime;
-  }
-}
-
-var settingrequest = new XMLHttpRequest();
-settingrequest.onreadystatechange = function() {
-  if(settingrequest.readyState == 4 && settingrequest.status == 200) {
-    settings = JSON.parse(settingrequest.responseText);
-    displaysettings();
-  }
-}
-
-var settingputrequest = new XMLHttpRequest();
-settingputrequest.onreadystatechange = function() {
-  if(settingputrequest.readyState == 4 && settingputrequest.status == 200) {
-    document.getElementById('setstatus').innerHTML = 'Updated settings';
-    getsettings();
-  }
-}
-
 function updatesensors() {
-  sensorrequest.open("GET", "/sensors", true);
-  sensorrequest.send();
+  $.getJSON('/sensors', function(data){
+    sensors = data;
+    $('#temp0').text(sensors.temperature[0].toFixed(1) + '°C');
+    $('#temp1').text(sensors.temperature[1].toFixed(1) + '°C');
+    $('#dc').text((sensors.dutycycle * 100).toFixed(1) + '%');
+    $('#date').text(sensors.servertime);
+  });
 }
 
 function getsettings() {
-  settingrequest.open("GET", "/settings", true);
-  settingrequest.send();
+  $.getJSON('/settings', function(data) {settings = data; console.log(data);});
+  displaysettings();
 }
-
 function formtosettings() {
-  var mode = document.getElementsByName('controlmode');
-  for(var i = 0; i < mode.length; i++) {
-    if(mode[i].checked === true) {
-      settings.controlmode = mode[i].value;
-    }
-  }
-  settings.staticDC = parseFloat(document.getElementById('staticDC').value) / 100;
-  settings.cycletime = parseInt(document.getElementById('cycletime').value);
-  settings.pid.setpoint = parseFloat(document.getElementById('setpoint').value);
-  settings.pid.P = parseFloat(document.getElementById('Pfactor').value);
-  settings.pid.I = parseFloat(document.getElementById('Ifactor').value);
-  settings.pid.D = parseFloat(document.getElementById('Dfactor').value);
-  settings.pid.Imax = parseFloat(document.getElementById('Imax').value);
-  settings.pid.Imin = parseFloat(document.getElementById('Imin').value);
-  settings.pid.offset = parseFloat(document.getElementById('offset').value) / 100;
+
+  settings.controlmode = $('input[name=controlmode]:checked').val();
+  settings.staticDC = parseFloat($('#staticDC').val()) / 100;
+  settings.cycletime = parseInt($('#cycletime').val());
+  settings.pid.setpoint = parseFloat($('#setpoint').val());
+  settings.pid.P = parseFloat($('#Pfactor').val());
+  settings.pid.I = parseFloat($('#Ifactor').val());
+  settings.pid.D = parseFloat($('#Dfactor').val());
+  settings.pid.Imax = parseFloat($('#Imax').val());
+  settings.pid.Imin = parseFloat($('#Imin').val());
+  settings.pid.offset = parseFloat($('#offset').val()) / 100;
 }
 
+// Todo: Check input? Empty strings and such.
 function putsettings() {
   formtosettings();
-  settingputrequest.open("POST", "/settings", true);
-  settingputrequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  settingputrequest.send(JSON.stringify(settings));
+  $.post("/settings", JSON.stringify(settings), function(data){ $('#setstatus').text('Updated settings') });
 }
 
 function displaysettings() {
-  var mode = document.getElementsByName('controlmode');
-  for(var i = 0; i < mode.length; i++) {
-    if(settings.controlmode === mode[i].value) {
-      mode[i].checked = true;
-    }
-  }
-  document.getElementById('staticDC').value = settings.staticDC.toFixed(3) * 100;
-  document.getElementById('cycletime').value = settings.cycletime;
-  document.getElementById('setpoint').value = settings.pid.setpoint.toFixed(1);
-  document.getElementById('Pfactor').value = settings.pid.P;
-  document.getElementById('Ifactor').value = settings.pid.I;
-  document.getElementById('Dfactor').value = settings.pid.D;
-  document.getElementById('Imax').value = settings.pid.Imax;
-  document.getElementById('Imin').value = settings.pid.Imin;
-  document.getElementById('offset').value = settings.pid.offset.toFixed(3) * 100;
+  $('input[value='+settings.controlmode+']').attr('checked', true);
+  $('#staticDC').val(settings.staticDC.toFixed(3) * 100);
+  $('#cycletime').val(settings.cycletime);
+  $('#setpoint').val(settings.pid.setpoint.toFixed(1));
+  $('#Pfactor').val(settings.pid.P);
+  $('#Ifactor').val(settings.pid.I);
+  $('#Dfactor').val(settings.pid.D);
+  $('#Imax').val(settings.pid.Imax);
+  $('#Imin').val(settings.pid.Imin);
+  $('#offset').val(settings.pid.offset.toFixed(3) * 100);
 }
 
 function focuschanged() {
-  document.getElementById('setstatus').innerHTML = '&nbsp;';
+  $('#setstatus').text('&nbsp;');
 }
 
 updatesensors();
 getsettings();
 window.setInterval(updatesensors, 2000);
 
-document.getElementById('updatesettings').onclick = putsettings;
+$('#updatesettings').click(putsettings);
 
-var allinputs = document.getElementsByTagName('input');
-for(var i = 0; i < allinputs.length; i++) {
-  allinputs[i].onfocus = focuschanged;
-}
-
+$('input').focus(focuschanged);
