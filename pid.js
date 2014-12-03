@@ -12,6 +12,7 @@
 function pid() {
 	this.Istate = 0;
 }
+function round(n) {return Math.round(n*100)/100;}
 
 pid.prototype.process = function(settings, inputvalue) {
 	var currentvalue;
@@ -51,7 +52,7 @@ pid.prototype.process = function(settings, inputvalue) {
 	else if(this.Istate < settings.Imin) this.Istate = settings.Imin;
 
 	var outputvalue = Ppart + this.Istate + Dpart;
-	console.log('P ' + Ppart + ' I ' + this.Istate + ' D ' + Dpart + ' Output value ' + outputvalue);
+	console.log('P ' + round(Ppart) + ' I ' + round(this.Istate) + ' D ' + round(Dpart) + ' Output value ' + round(outputvalue));
 	return outputvalue;
 }
 

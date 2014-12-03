@@ -18,6 +18,7 @@ try {
   var thermo = new pi1wire();
 } catch(er) {
   console.log('Not all hardware is in place, running in dev mode');
+  console.log(er);
   dummymode = true;
 }
 
