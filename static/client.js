@@ -1,13 +1,23 @@
 var sensors;
+var sensordata = [];
 var settings;
 
 function updatesensors() {
   $.getJSON('/sensors', function(data){
     sensors = data;
     $('#temp0').text(sensors.temperature[0].toFixed(1) + '°C');
-    $('#temp1').text(sensors.temperature[1].toFixed(1) + '°C');
+    try {
+      $('#temp1').text(sensors.temperature[1].toFixed(1) + '°C');
+    } catch (e) { console.log('Looks like we only have one sensor...'); }
+
     $('#dc').text((sensors.dutycycle * 100).toFixed(1) + '%');
     $('#date').text(sensors.servertime);
+
+    // Temperature graph
+    sensordata.push(sensors.temperature[0]);
+    // Trim history to max 5 minutes. Todo: Log everything to sqlite via node?
+    if (sensordata.length > 150) sensordata.splice(0,1);
+    $('#tempchart').sparkline(sensordata, {width: 350, height: 60, tooltipSuffix: ' degrees celsius'});
   });
 }
 
@@ -60,4 +70,3 @@ window.setInterval(updatesensors, 2000);
 $('#updatesettings').click(putsettings);
 
 $('input').focus(function() {$('#setstatus').text('&nbsp;');});
-
