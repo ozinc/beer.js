@@ -17,7 +17,7 @@ function updatesensors() {
     sensordata.push(sensors.temperature[0]);
     // Trim history to max 5 minutes. Todo: Log everything to sqlite via node?
     if (sensordata.length > 150) sensordata.splice(0,1);
-    $('#tempchart').sparkline(sensordata, {width: 350, height: 60, tooltipSuffix: ' degrees celsius'});
+    $('#tempchart').sparkline(sensordata, {width: 460, height: 60, tooltipSuffix: ' degrees celsius'});
   });
 }
 
@@ -46,7 +46,14 @@ function formtosettings() {
 // Todo: Check input? Empty strings and such.
 function putsettings() {
   formtosettings();
-  $.post("/settings", JSON.stringify(settings), function(data){ $('#setstatus').text('Updated settings') });
+  console.log(JSON.stringify(settings));
+  $.ajax({
+    type: 'POST',
+    data: JSON.stringify(settings),
+    dataType: 'json',
+    contentType: 'application/json; charset=utf-8',
+    url: "/settings"
+  }).done(function(response) {$('#setstatus').text('Updated settings');});
 }
 
 function displaysettings() {

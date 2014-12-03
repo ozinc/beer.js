@@ -63,7 +63,7 @@ setInterval(function() {
   }
   thermo.get(0, function (err, val) {
     sensors.temperature[0] = val;
-    console.log('Temperature is ' + val);
+    //console.log('Temperature is ' + val);
   });
   thermo.get(1, function(err,val) {
     sensors.temperature[1] = val;
@@ -117,7 +117,6 @@ function getsettings(req, res) {
 }
 
 function setsettings(req, res) {
-  console.log(req.body);
   var ct = settings.cycletime;
   settings = req.body;
   if(ct != settings.cycletime) {

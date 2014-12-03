@@ -23,7 +23,7 @@ if (!datadogApiKey) {
 setInterval(function() {
 	thermo.get(0, function (err, val) {
 		temperature = val;
-		console.log('Temperature is ' + val);
+		//console.log('Temperature is ' + val);
 		var data = {
 			"series": [{
 					"metric": "beer.temperature",
