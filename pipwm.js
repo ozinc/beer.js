@@ -4,7 +4,7 @@ pipwm = function(pin, period) {
   this.period = period;
   this.helper = cp.spawn('helpers/pwm', [ pin, period, 0 ]);
   this.helper.on('close', function(code) {
-      console.log('PWM process exited with code %d', code);
+      debug('PWM process exited with code %d', code);
   });
 }
 
