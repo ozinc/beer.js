@@ -1,4 +1,3 @@
-
 var pid = require('./pid');
 
 var settings = {

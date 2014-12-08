@@ -1,3 +1,4 @@
+var debug = require('debug')('beerwww')
 var pigpio = require('./pigpio');
 var pi1wire = require('./pi1wire');
 var pid = require('./pid');
@@ -6,6 +7,10 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
 var fs = require('fs');
+
+var dbfile = "data.db";
+var sqlite3 = require("sqlite3").verbose();
+var db = new sqlite3.Database(dbfile);
 
 var server = express();
 
@@ -21,6 +26,11 @@ try {
   console.log(er);
   dummymode = true;
 }
+
+/*if (!fs.existsSync(dbfile))
+{
+  db.run("CREATE TABLE temperature (id INT PRIMARY KEY NOT NULL, sensor CHAR(32) NOT NULL, value REAL NOT NULL, date text NOT NULL)");
+}*/
 
 var sensors = {
   temperature: [0, 0],
@@ -45,7 +55,7 @@ var settings = {
 try {
   var nonvolatile = fs.readFileSync(settingsfile);
   settings = JSON.parse(nonvolatile.toString());
-  console.log(settings);
+  debug(settings);
 } catch(er) {
   console.log('No stored settings found, using default');
 }
@@ -63,11 +73,16 @@ setInterval(function() {
   }
   thermo.get(0, function (err, val) {
     sensors.temperature[0] = val;
-    console.log('Temperature is ' + val);
+    debug('Temperature is ' + val);
   });
   thermo.get(1, function(err,val) {
     sensors.temperature[1] = val;
   });
+
+  date = new Date();
+  for (var t in sensors.temperature) { // Ridiculous granularity ahoy!
+    //db.run('INSERT INTO temperature (sensor, value, date) VALUES (?,?,?)', [t,date.toISOString(),sensors.temperature[t]]);
+  }
 }, 2000);
 
 function setoutputs(val) {
@@ -95,19 +110,20 @@ function outputprocess() {
     console.log('100% duty');
     setoutputs(1);
   } else {
-    console.log(output * 100 + '% duty');
+    debug(output * 100 + '% duty');
     setoutputs(1);
     setTimeout(function() {
       setoutputs(0);
-      console.log('Turning off on timer');
+      debug('Turning off on timer');
     }, delay);
   }
 }
 
 var outpchandle = setInterval(outputprocess, settings.cycletime * 1000);
 
+// Views
 function getsensors(req,res) {
-  var date = new Date();
+  date = new Date();
   sensors.servertime = date.toISOString();
   res.status(200).json(sensors);
 }
@@ -117,7 +133,6 @@ function getsettings(req, res) {
 }
 
 function setsettings(req, res) {
-  console.log(req.body);
   var ct = settings.cycletime;
   settings = req.body;
   if(ct != settings.cycletime) {

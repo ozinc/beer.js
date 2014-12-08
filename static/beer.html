@@ -3,6 +3,7 @@
 <title>Brewberry controller</title>
 </head>
 <body>
+<div id="tempchart"></div>
 <table>
   <tr>
     <td>Temperature 0</td>
@@ -16,7 +17,6 @@
     <td>Duty cycle</td>
     <td id="dc"></td>
   </tr>
-  <form id="settingsform">
   <tr>
     <td>Control mode</td>
     <td>
@@ -27,48 +27,48 @@
   </tr>
   <tr>
     <td>Manual duty cycle</td>
-    <td><input type="text" name="staticDC" id="staticDC" /> %</td>
+    <td><input type="text" name="staticDC" id="staticDC" data-controltype="manual" /> %</td>
   </tr>
   <tr>
     <td>PWM cycle time</td>
-    <td><input type="text" name="cycletime" id="cycletime" /> seconds</td>
+    <td><input type="text" name="cycletime" id="cycletime" data-controltype="both" /> seconds</td>
   </tr>
   <tr>
     <td>PID set point</td>
-    <td><input type="text" name="setpoint" id="setpoint" /> °C</td>
+    <td><input type="text" name="setpoint" id="setpoint" data-controltype="pid" /> °C</td>
   </tr>
   <tr>
     <td>PID P factor</td>
-    <td><input type="text" name="Pfactor" id="Pfactor" /></td>
+    <td><input type="text" name="Pfactor" id="Pfactor" data-controltype="pid" /></td>
   </tr>
   <tr>
     <td>PID I factor</td>
-    <td><input type="text" name="Ifactor" id="Ifactor" /></td>
+    <td><input type="text" name="Ifactor" id="Ifactor" data-controltype="pid" /></td>
   </tr>
   <tr>
     <td>PID D factor</td>
-    <td><input type="text" name="Dfactor" id="Dfactor" /></td>
+    <td><input type="text" name="Dfactor" id="Dfactor" data-controltype="pid" /></td>
   </tr>
   <tr>
     <td>I upper limit</td>
-    <td><input type="text" name="Imax" id="Imax" /></td>
+    <td><input type="text" name="Imax" id="Imax" data-controltype="pid" /></td>
   </tr>
   <tr>
     <td>I lower limit</td>
-    <td><input type="text" name="Imin" id="Imin" /></td>
+    <td><input type="text" name="Imin" id="Imin" data-controltype="pid" /></td>
   </tr>
   <tr>
     <td>PID base duty cycle</td>
-    <td><input type="text" name="offset" id="offset" /> %</td>
+    <td><input type="text" name="offset" id="offset" data-controltype="pid" /> %</td>
   </tr>
   <tr>
     <td><input type="submit" value="Change settings" id="updatesettings" /></td>
     <td id="setstatus"></td>
   </tr>
-  </form>
 </table>
 <p id="date"></p>
 </body>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script language="javascript" src="client.js"></script>
+<script src="client.js"></script>
+<script src="jquery.sparkline.min.js"></script>
 </html>

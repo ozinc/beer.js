@@ -1,3 +1,5 @@
+var debug = require('debug')('pidcontrol')
+
 var request = require('request');
 
 var pigpio = require('./pigpio');
@@ -23,7 +25,7 @@ if (!datadogApiKey) {
 setInterval(function() {
 	thermo.get(0, function (err, val) {
 		temperature = val;
-		console.log('Temperature is ' + val);
+		//console.log('Temperature is ' + val);
 		var data = {
 			"series": [{
 					"metric": "beer.temperature",
@@ -53,17 +55,17 @@ setInterval(function() {
 	var output = pidctl.process(temperature);
 	var delay = cycletime * 1000 * output;
 	if(output <= 0) {
-		console.log('0% duty');
+		debug('0% duty');
 		gpio2.set(0, null);
 	} else if(output >= 1) {
-		console.log('100% duty');
+		debug('100% duty');
 		gpio2.set(1, null);
 	} else {
-		console.log(output * 100 + '% duty');
+		debug(output * 100 + '% duty');
 		gpio2.set(1, function() {
 			setTimeout(function() {
 				gpio2.set(0, null);
-				console.log('Turning off on timer');
+				debug('Turning off on timer');
 			}, delay);
 		});
 	}
